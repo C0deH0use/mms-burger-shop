@@ -30,6 +30,34 @@ graph TD
 
 [Add instructions on how to set up and run the project]
 
+
+## 
+
+```mermaid
+sequenceDiagram
+participant RequestService as Request Service
+participant Cache as Redis (Shelf State)
+participant Kafka as Kafka (Event Bus)
+participant KitchenWorkers as Kitchen Workers
+
+RequestService->>Cache: Check shelf for item availability
+alt Item available
+RequestService->>Cache: Reserve items for order
+RequestService->>Kafka: Notify shelf update via ShelfEventsTopic
+else Item missing
+RequestService->>Kafka: Publish missing items on MissingItemsTopic
+end
+
+Kafka->>KitchenWorkers: Consume missing item request
+KitchenWorkers->>KitchenWorkers: Prepare items
+KitchenWorkers->>Cache: Add items to shelf
+KitchenWorkers->>Kafka: Publish shelf update via ShelfEventsTopic
+
+Kafka->>RequestService: Notify shelf update
+
+
+```
+
 ## Contributing
 
 [Add guidelines for contributing to the project]

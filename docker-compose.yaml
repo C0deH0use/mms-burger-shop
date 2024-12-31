@@ -1,17 +1,40 @@
 version: "3.8"
 
-name: restaurant-worker-services
+name: burger-shop
 
 services:
+  api:
+    build: restaurant-requests/
+    ports:
+      - "8080:8080"
+    depends_on:
+      - restaurant-requests-db
+      - broker_one
+      - broker_two
+    profiles:
+      - burger-shop
+
+  restaurant-requests-db:
+    image: postgres:latest
+    container_name: restaurant-requests-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: db_password
+      POSTGRES_DB: restaurant_requests_db
+    profiles:
+      - db
+      - dependencies
   worker:
-    build: .
+    build: kitchen-worker
     ports:
       - "8080:8080"
     depends_on:
       - broker_one
       - broker_two
     profiles:
-      - worker
+      - burger-shop
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0

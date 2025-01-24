@@ -7,3 +7,6 @@
 [submodule "kitchen-shelf"]
 	path = kitchen-shelf
 	url = https://github.com/C0deH0use/kitchen-shelf.git
+[submodule "burger-commons"]
+	path = burger-commons
+	url = https://github.com/C0deH0use/burger-commons.git

@@ -6,25 +6,33 @@ This project simulates a burger shop operation with two main components: kitchen
 
 ```mermaid
 graph TD
-    A[Burger Shop Project] --> B[kitchen-worker]
-    A --> C[restaurant-requests]
-    B --> D[Processes orders]
-    B --> E[Manages inventory]
-    C --> F[Handles customer orders]
-    C --> G[Manages order queue]
+    A[request-service] --> K[Kafka Broker] 
+    A[request-service] --> S[Shelf service]
+    S --> S1[Manages menu items on shelf]
+    K --> B[kitchen-worker]
+    B --> B1[process menu item preparation]
+    B --> B2[notify on items prepared]
+    B2 --> K
+    K --> S[update items on shelf]
+    
+    A --> A1[Processes orders]
+    A --> A2[Handles customer orders]
+    A --> A3[Manages order queue]
 ```
 
 ## Components
 
 1. **kitchen-worker**: This component is responsible for:
    - Processing incoming orders
-   - Managing the kitchen inventory
    - Preparing burgers and other menu items
 
-2. **restaurant-requests**: This component handles:
+2. **request-service**: This component handles:
    - Receiving customer orders
    - Managing the order queue
    - Communicating with the kitchen-worker
+
+3. **kitchen-shelf**: This component handles:
+   - Managing the restaurant shelf
 
 ## Getting Started
 
